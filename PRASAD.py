@@ -12,8 +12,8 @@ def data_loader():
     train_data_, train_targets = train_MNIST.data, train_MNIST.targets
     test_data_, test_targets = test_MNIST.data, test_MNIST.targets
 
-    train_data = train_data_.reshape(-1, 784) / 256
-    test_data = test_data_.reshape(-1, 784) / 256
+    train_data = train_data_[:, ::4, ::4].reshape(-1, 49) / 256
+    test_data = test_data_[:, ::4, ::4].reshape(-1, 49) / 256
 
     return train_data, train_targets, test_data, test_targets
 
@@ -29,23 +29,24 @@ def init_weights(dict_net):
 
 def forward(x_row, dict_net):
 
-    layer_output = x_row
+    layer1_x_plus_w = x_row.repeat(dict_net["layers"]["layer1"][0], 1) + dict_net["weights"]["layer1"]
+    joint_probability_layer1 = torch.prod(layer1_x_plus_w, dim=1)
+    layer1_output = joint_probability_layer1 + dict_net["Bias"]["layer1"]
+    layer1_relu_output = F.relu(layer1_output)
 
-    for layer_str in sorted(dict_net["layers"].keys()):
-        layer_shape = dict_net["layers"][layer_str]
+    layer2_x_plus_w = layer1_relu_output.repeat(dict_net["layers"]["layer2"][0], 1) + dict_net["weights"]["layer2"]
+    joint_probability_layer2 = torch.prod(layer2_x_plus_w, dim=1)
+    layer2_output = joint_probability_layer2 + dict_net["Bias"]["layer2"]
 
-        x_plus_w = layer_output.repeat(layer_shape[0], 1) + dict_net["weights"][layer_str]
-        joint_probability = torch.prod(x_plus_w, dim=1)
-        layer_output = joint_probability + dict_net["Bias"][layer_str]
-
-        if dict_net["ReLU"][layer_str]: layer_output = F.relu(layer_output)
-
-    return layer_output
+    return layer2_output
 
 def update_weights(dict_net, LR):
 
     for layer_str in sorted(dict_net["weights"].keys()):
         w = dict_net["weights"][layer_str]
         dict_net["weights"][layer_str] = nn.Parameter(torch.Tensor(w.detach() - LR * w.grad.detach()))
+
+        Bias = dict_net["Bias"][layer_str]
+        dict_net["Bias"][layer_str] = nn.Parameter(torch.Tensor(Bias.detach() - LR * Bias.grad.detach()))
 
     return dict_net
