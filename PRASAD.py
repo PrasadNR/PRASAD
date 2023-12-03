@@ -12,8 +12,8 @@ def data_loader():
     train_data_, train_targets = train_MNIST.data, train_MNIST.targets
     test_data_, test_targets = test_MNIST.data, test_MNIST.targets
 
-    train_data = train_data_.reshape(-1, 784)
-    test_data = test_data_.reshape(-1, 784)
+    train_data = train_data_.reshape(-1, 784) / 256
+    test_data = test_data_.reshape(-1, 784) / 256
 
     return train_data, train_targets, test_data, test_targets
 
