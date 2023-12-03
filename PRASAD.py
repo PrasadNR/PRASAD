@@ -23,7 +23,7 @@ def init_weights(dict_net):
 
     for key in dict_net["layers"].keys():
         dict_net["weights"][key] = torch.randn(dict_net["layers"][key], requires_grad=True)
-        dict_net["Bias"][key] = torch.randn(dict_net["layers"][key].shape[0], requires_grad=True)
+        dict_net["Bias"][key] = torch.randn(dict_net["layers"][key][0], requires_grad=True)
 
     return dict_net
 
