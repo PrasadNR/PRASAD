@@ -7,12 +7,8 @@ train_data, train_targets, test_data, test_targets = data_loader()
 dict_net = dict()
 
 dict_net["layers"] = dict()
-dict_net["layers"]["layer2"] = (10, 256)  # (256, 10)
-dict_net["layers"]["layer1"] = (256, 784)  # (784, 256)
-
-dict_net["ReLU"] = dict()
-dict_net["ReLU"]["layer2"] = False
-dict_net["ReLU"]["layer1"] = True
+dict_net["layers"]["layer2"] = (10, 16)  # (256, 10)
+dict_net["layers"]["layer1"] = (16, 49)  # (784, 256)
 
 dict_net = init_weights(dict_net)
 
@@ -27,7 +23,7 @@ for j in range(n_epochs):
         loss = loss_criterion(ASAD_output, y)
         loss.backward()
 
-        dict_net = update_weights(dict_net, LR=0.001)
+        dict_net = update_weights(dict_net, LR=2 ** -8)
 
         print(loss)
 
