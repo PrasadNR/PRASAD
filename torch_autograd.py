@@ -12,7 +12,7 @@ dict_net["layers"]["layer1"] = (16, 49)  # (784, 256)
 
 dict_net = init_weights(dict_net)
 
-n_epochs = 8; t0 = time()
+n_epochs = 8; t0 = time(); loss = 0
 for j in range(n_epochs):
     for i in range(train_targets.shape[0]):
         x = train_data[i, :]
@@ -23,8 +23,8 @@ for j in range(n_epochs):
         loss = loss_criterion(ASAD_output, y)
         loss.backward()
 
-        dict_net = update_weights(dict_net, LR=2 ** -8)
+        dict_net = update_weights(dict_net, LR=2 ** -16)
 
-        print(loss)
+    print(j, float(loss))
 
 print(time() - t0, "seconds")
