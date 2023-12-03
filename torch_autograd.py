@@ -1,4 +1,3 @@
-import torch
 from time import time
 import torch.nn as nn
 from PRASAD import data_loader, forward, init_weights, update_weights
@@ -29,5 +28,7 @@ for j in range(n_epochs):
         loss.backward()
 
         dict_net = update_weights(dict_net, LR=0.001)
+
+        print(loss)
 
 print(time() - t0, "seconds")
