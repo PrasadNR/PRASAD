@@ -54,20 +54,22 @@ def update_weights(dict_net, LR):
     return dict_net
 
 def torch_eval(dict_net, test_data, test_targets):
-    with torch.no_grad():
-        test_predict = np.zeros(test_targets.shape[0])
-        for i in range(test_targets.shape[0]):
-            layer1_x_plus_w = test_data[i, :].repeat(dict_net["layers"]["layer1"][0], 1) + dict_net["weights"]["layer1"]
-            print(layer1_x_plus_w)
-            joint_probability_layer1 = torch.prod(layer1_x_plus_w, dim=1)
-            layer1_output = joint_probability_layer1 + dict_net["Bias"]["layer1"]
-            layer1_relu_output = F.relu(layer1_output)
+    test_predict = np.zeros(test_targets.shape[0])
+    for i in range(test_targets.shape[0]):
+        np_test_data = test_data[i, :].detach().numpy()
+        layer1_x_plus_w = np.tile(np_test_data, (dict_net["layers"]["layer1"][0], 1)) + dict_net["weights"]["layer1"].detach().numpy()
+        joint_probability_layer1 = np.prod(layer1_x_plus_w, axis=1)
+        layer1_output = joint_probability_layer1 + dict_net["Bias"]["layer1"].detach().numpy()
+        layer1_relu_output = np.copy(layer1_output)
+        layer1_relu_output[layer1_relu_output < 0] = 0
 
-            layer2_x_plus_w = layer1_relu_output.repeat(dict_net["layers"]["layer2"][0], 1) + dict_net["weights"]["layer2"]
-            joint_probability_layer2 = torch.prod(layer2_x_plus_w, dim=1)
-            layer2_output = joint_probability_layer2 + dict_net["Bias"]["layer2"]
+        layer2_x_plus_w = np.tile(layer1_relu_output, (dict_net["layers"]["layer2"][0], 1)) + dict_net["weights"]["layer2"].detach().numpy()
+        joint_probability_layer2 = np.prod(layer2_x_plus_w, axis=1)
+        layer2_output = joint_probability_layer2 + dict_net["Bias"]["layer2"].detach().numpy()
 
-            test_predict[i] = np.argmax(layer2_output)
+        print(joint_probability_layer1)
+
+        test_predict[i] = np.argmax(layer2_output)
 
     test_accuracy = np.sum(test_predict == test_targets) / test_targets.shape[0]
     return test_predict, test_accuracy
