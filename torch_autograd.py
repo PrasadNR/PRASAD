@@ -1,14 +1,14 @@
 from time import time
 import torch.nn as nn
-from PRASAD import data_loader, forward, init_weights, update_weights
+from PRASAD import data_loader, forward, init_weights, update_weights, torch_eval
 
 train_data, train_targets, test_data, test_targets = data_loader()
 
 dict_net = dict()
 
 dict_net["layers"] = dict()
-dict_net["layers"]["layer2"] = (10, 16)  # (256, 10)
-dict_net["layers"]["layer1"] = (16, 49)  # (784, 256)
+dict_net["layers"]["layer2"] = (10, 256)  # (256, 10)
+dict_net["layers"]["layer1"] = (256, 784)  # (784, 256)
 
 dict_net = init_weights(dict_net)
 
@@ -25,6 +25,7 @@ for j in range(n_epochs):
 
         dict_net = update_weights(dict_net, LR=2 ** -16)
 
-    print(j, float(loss))
+    test_predict, test_accuracy = torch_eval(dict_net, test_data, test_targets)
+    print(j, float(loss), test_accuracy)
 
 print(time() - t0, "seconds")
