@@ -12,7 +12,7 @@ dict_net["layers"]["layer1"] = (16, 49)  # (784, 256)
 
 dict_net = init_weights(dict_net)
 
-n_epochs = 8; t0 = time(); loss = 0
+n_epochs = 16; t0 = time(); loss = 0
 for j in range(n_epochs):
     for i in range(train_targets.shape[0]):
         x = train_data[i, :]
