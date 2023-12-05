@@ -18,6 +18,11 @@ layer1_prod_output = np.prod(layer1_output, axis=1)
 layer1_relu_output = np.copy(layer1_prod_output)
 layer1_relu_output[layer1_relu_output < 0] = 0
 
+layer2_input_3d = np.repeat(layer1_relu_output[:, :, None], dict_net["layer2"].shape[1], axis=2)
+layer2_weights_3d = np.repeat(dict_net["layer2"][None, :, :], N_TRAIN_ROWS, axis=0)
+layer2_output = layer2_input_3d + layer2_weights_3d
+layer2_prod_output = np.prod(layer2_output, axis=1)
 
+print(layer2_prod_output.shape)
 
 print(time() - t0, "seconds")
