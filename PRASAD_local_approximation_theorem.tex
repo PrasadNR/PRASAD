@@ -58,6 +58,44 @@
 		\end{equation}
 
 	\end{section}
+
+	\begin{section}{Local Approximation Theorem}
+		\begin{equation}
+			Layer \; output \; = ReLU[(\prod_i(x_i + w_i)) + B]
+		\end{equation}
+		Practically, this evaluates polynomial vectors instead of linear functions.
+		
+		\begin{subsection}{Assumption 1}
+			x $\sim$ U(-$\epsilon$, $\epsilon$); $\epsilon \; \rightarrow \; 0$\\
+			x $\sim$ Identical and Independent Uniform Random Distribution
+		\end{subsection}
+		
+		\begin{subsection}{Assumption 2}
+			$|x| << |w|$ (or $|x_i| << |w_i| \quad \forall i$)
+		\end{subsection}
+		
+		\begin{subsection}{Assumption 3}
+			From assumption 2,
+			Layer output $\simeq$ ReLU[($\prod_j w_j + \Sigma_i [\prod_{j \ne i} w_j] x_i$) + B]
+		\end{subsection}
+
+		\begin{subsection}{Assumption 4}
+			$w_i \ne 0 \quad \forall i$
+		\end{subsection}
+
+		\begin{subsection}{Local Approximation Theorem Proof}
+			Let us assume
+			\begin{equation}
+				ReLU[\Sigma_i m_i x_i + b] \simeq ReLU[(\prod_j w_j + \Sigma_i[\prod_{j \ne i} w_j]x_i) + B]
+			\end{equation}
+			
+			\begin{equation}
+				\Sigma_i m_i x_i + b \simeq (\prod_j w_j + \Sigma_i[\prod_{j \ne i} w_j]x_i) + B
+			\end{equation}
+			
+			\framebox{$m_i \simeq \prod_{j \ne i} w_j \simeq \frac{\prod_j w_j}{w_i} \qquad and \qquad b \simeq \prod_j w_j + B$}
+		\end{subsection}
+	\end{section}
 	
 	\begin{thebibliography}{1}
 		
