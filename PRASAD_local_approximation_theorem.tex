@@ -1,6 +1,7 @@
 \documentclass{article}
 \title{Posterior Regression: Approximated Statistically Approximate Distributions}
 \author{Prasad N R\\Alumnus, Computer Engineering, \\Carnegie Mellon University\\prasadnr606@yahoo.in}
+\date{7 December 2023}
 
 \begin{document}
 	\maketitle 
@@ -14,6 +15,48 @@
 	
 	\begin{section}{Prior Work}
 		This work is inspired by Bayes statistics, Laplace smoothing and additive smoothing. Some of the convex optimisation solutions include Backpropagation and Blind-descent.\cite{hinton}\cite{blindDescent} Some of the ideas of explainable deep-learning is similar to the explanation algorithms of ABAD.\cite{explainableDeepLearning} Also, PyTorch is used for `autograd` of ABAD statistics.\cite{PyTorch} Although Scikit-learn has MNIST data-set and common functions, for ABAD, a custom Python forward-function has been designed.\cite{scikit-learn}
+	\end{section}
+	
+	\begin{section}{Approximated Bayes Approximate Distributions (ABAD)}
+		\begin{equation}
+			P(X_{vector}, Y) = [\prod_i P(\frac{X_i}{Y})]P(Y) \qquad \forall_i P(\frac{X_i}{Y}) \ne 0
+		\end{equation}
+		"Laplace smoothing": For any i, if $P(\frac{X_i}{Y}) = 0$,
+		\begin{equation}
+			P(X_{vector}, Y) = [\prod_i [P(\frac{X_i}{Y}) + 1]]P(Y)
+		\end{equation}
+
+		But, this approximation of 1 may not always work if we assume Y to be a latent label. So, we can assume $w_i$ instead of 1. So, if we try to estimate this joint probability,
+		\begin{equation}
+			P(X_{vector}, Y) = [\prod_i [P(\frac{X_i}{Y}) + w_i]]P(Y) 
+		\end{equation}
+		
+		\begin{equation}
+			P(X_{vector}, Y) \propto P(\frac{Y}{X_{vector}}) \Rightarrow P(\frac{Y}{X_{vector}}) \propto [\prod_i [P(\frac{X_i}{Y}) + w_i]]P(Y)
+		\end{equation}
+
+		So, we have layer's Joint Probability output for X [with X as input].
+		\begin{equation}
+			 P(\frac{Y}{X_{vector}}) \propto \prod_i [P(\frac{X_i}{Y}) + w_i] \Rightarrow Joint \; probability \; output = \prod_i (x_i + w_i)
+		\end{equation}
+		We ignore P(Y) as it is a multiplicative latent variable (scaling factor). So, we can consider a "deep-learning" stack of these non-linear joint probability layers. If we consider $x_i$ to be static $\forall i$, we do not need any activation layer as 
+
+		$$\prod_i (x_i + w_i) = \left\{
+			\begin{array}{lr}
+				x_i & \; if \; w_j = -x_j + 1 \;\forall j \ne i \;\&\; w_i = 0 \\
+				0 & \; if \; w_i = -x_i
+			\end{array}
+			\right.$$ 
+
+		But, $x_i$ "doesn't have to be" "static". So, we need an activation layer also. I use ReLU for this.\\\\
+		Static $\rightarrow x_i$ is a constant for the entire batch $\forall i$.\\
+		
+		But, joint-probability output is an input for the next joint-probability layer. So, if we have an activation layer like ReLU between these layers, we can split the additive weight $W_{activation}$ across ReLU. So, input of ReLU is supposed to have an additive weight "B" along with the output of joint-probability layer.
+		
+		\begin{equation}
+			Layer \; output \; = ReLU[(\prod_i(x_i + w_i)) + B]
+		\end{equation}
+
 	\end{section}
 	
 	\begin{thebibliography}{1}
