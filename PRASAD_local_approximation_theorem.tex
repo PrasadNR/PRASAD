@@ -12,6 +12,10 @@
 		Bayes probability rule provides us the posteriori. So, an idea is to use probabilities that are not dependent on specific probability distributions, Gaussian distribution for example. Also, usually Laplace smoothing is used and 1's are added to the Bayes conditional probabilities. But, this 1 may not be the best additive correction all the time. Also, a hierarchy of these probabilities is proposed. Regarding the probability training process, there seems to be none as this Approximated Bayes Approximate Distributions (ABAD) is an idea that is being proposed in this research-paper. 
 	\end{section}
 	
+	\begin{section}{Prior Work}
+		This work is inspired by Bayes statistics, Laplace smoothing and additive smoothing. Some of the convex optimisation solutions include Backpropagation and Blind-descent.\cite{hinton}\cite{blindDescent} Some of the ideas of explainable deep-learning is similar to the explanation algorithms of ABAD.\cite{explainableDeepLearning} Also, PyTorch is used for `autograd` of ABAD statistics.\cite{PyTorch} Although Scikit-learn has MNIST data-set and common functions, for ABAD, a custom Python forward-function has been designed.\cite{scikit-learn}
+	\end{section}
+	
 	\begin{thebibliography}{1}
 		
 		\bibitem{blindDescent}
