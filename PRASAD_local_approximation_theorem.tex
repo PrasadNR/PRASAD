@@ -97,6 +97,26 @@
 		\end{subsection}
 	\end{section}
 	
+	\begin{section}{Local Convex Optimisation and Discussion}
+		There are many beautiful thought processes related to this. Those include faster training (as we are training polynomials instead of some linear approximations) and weight correlation (as each $x_i$ depends on all other weights).
+		
+		\begin{subsection}{Backpropagation}
+			As each $x_i$ depends on all other weights, the sum of these gradients are important. Weights with greater magnitude are supposed to be updated with "correction" of greater magnitude.
+			\begin{equation}
+				\frac{\partial L}{\partial w_i} = \eta w_i \Sigma_{j \ne i} \frac{\partial L}{\partial m_j}
+			\end{equation}
+		\end{subsection}
+
+		\begin{subsection}{autograd}
+			For a 32-bit computer, Bias or any input that is like a bias can cause gradient magnitude problems. It is difficult to train relatively large networks of ABAD using this.
+		\end{subsection}
+
+		\begin{subsection}{Blind Descent}
+			Bias wasn't considered for this as the range of the bias can be $[-\infty, \infty]$. This caused significant problems and didn't work properly.
+		\end{subsection}
+
+	\end{section}
+	
 	\begin{thebibliography}{1}
 		
 		\bibitem{blindDescent}
